@@ -1,9 +1,13 @@
 DoAddonConnector.setup do |config|
   # 
-  # 
-  # Resource Creation
-  # 
-  # 
+  # Service Name
+  # ======================
+  # This is the name of the parent service
+  config.service_name = "Scrubl"
+
+  # Source
+  # ======================
+  # This represents the source of the user
   config.source = 'digitalocean'
 
   # SSO Redirect

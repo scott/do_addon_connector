@@ -51,6 +51,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       if auth_code.save
         logger.info("\nAuth Code saved!\n")
         # @user.fetch_token(auth_code.id)
+        Token.fetch(@user.id, auth_code.id)
       end
 
       # Your app will then respond with the following:

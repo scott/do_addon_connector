@@ -7,8 +7,8 @@ module DoAddonConnector
       source_root File.expand_path('..', __FILE__)
 
       def copy_migrations
-        # rake "railties:install:migrations"
-        # rake "db:migrate"
+        bin/rails "do_addon_connector:install:migrations"
+        rake "db:migrate"
       end
 
       def copy_initializer
