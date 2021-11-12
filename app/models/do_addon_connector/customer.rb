@@ -1,5 +1,5 @@
 module DoAddonConnector
-  class Fk < ApplicationRecord
+  class Customer < ApplicationRecord
     validates :user_id, uniqueness: true
     validates :key, uniqueness: true
 

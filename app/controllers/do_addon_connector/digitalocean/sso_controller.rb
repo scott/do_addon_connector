@@ -36,8 +36,8 @@ class DoAddonConnector::Digitalocean::SsoController < ApplicationController
   def create
 
     # look up user by DO uuid
-    fk = DoAddonConnector::Fk.find_by(key: params[:resource_uuid])
-    @user = User.find_by(id: fk.user_id)
+    customer = DoAddonConnector::Customer.find_by(key: params[:resource_uuid])
+    @user = User.find_by(id: customer.user_id)
     
     if @user.present? && resource_token == params[:token]        
         # authenticate user

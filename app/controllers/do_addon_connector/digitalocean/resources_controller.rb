@@ -34,11 +34,14 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
     if @user.save
       logger.info("User saved\n")
 
-      # associate to user with FK
-      fk = DoAddonConnector::Fk.create!(
+      # associate to user with Customer
+      customer = DoAddonConnector::Customer.create!(
         user_id: @user.id,
         key: params[:uuid],
-        metadata: params[:metadata]
+        metadata: params[:metadata],
+        plan: params[:plan_slug],
+        email: params[:email],
+        creator_uuid: params[:creator_uuid]
       )
 
       # Save authorization_code
@@ -51,7 +54,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       if auth_code.save
         logger.info("\nAuth Code saved!\n")
         # @user.fetch_token(auth_code.id)
-        Token.fetch(@user.id, auth_code.id)
+        DoAddonConnector::Token.fetch(@user.id, auth_code.id) unless Rails.env.development?
       end
 
       # Your app will then respond with the following:
@@ -67,7 +70,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       # }
 
       response = {
-        id: fk.id,
+        id: customer.id,
         config: {
         },
         message: "#{DoAddonConnector.service_name} Account created successfully"
@@ -103,8 +106,8 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
   # }
 
   def update
-    fk = DoAddonConnector::Fk.find_by(key: params[:id])
-    @user = User.find_by(id: fk.user_id)
+    customer = DoAddonConnector::Customer.find_by(key: params[:id])
+    @user = User.find_by(id: customer.user_id)
     if @user.present?
       @user.plan = params[:plan_slug]
       if @user.save
@@ -152,13 +155,13 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
   # {}
   def destroy
-    fk = DoAddonConnector::Fk.find_by(key: params[:id])
-    @user = User.find_by(id: fk.user_id)
+    customer = DoAddonConnector::Customer.find_by(key: params[:id])
+    @user = User.find_by(id: customer.user_id)
 
     if @user.present?
-      DoAddonConnector::Token.find_by(user_id: fk.user_id).destroy
+      DoAddonConnector::Token.find_by(user_id: customer.user_id).destroy
       @user.destroy!
-      fk.destroy!
+      customer.destroy!
 
       render status: '204', json: :ok
     else
