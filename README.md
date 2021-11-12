@@ -1,25 +1,23 @@
-# DoAddonConnector
-Short description and motivation.
+# DO Addon Connector
 
-## Usage
-How to use my plugin.
+Description of what it does.  Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
+
+## Requirements
+
+Currently requires that you provide authentication with `Devise`, and a `User` model.  Rails 6.1
 
 ## Installation
-Add this line to your application's Gemfile:
+Add to your gem file.
 
-```ruby
+```
 gem 'do_addon_connector'
+bundle 
+rails do_addon_connector:install:migrations
 ```
 
-And then execute:
-```bash
-$ bundle
-```
+Create your addon listing at DO.
 
-Or install it yourself as:
-```bash
-$ gem install do_addon_connector
-```
+
 
 ## Contributing
 Contribution directions go here.
