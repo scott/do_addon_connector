@@ -9,7 +9,7 @@ Currently requires that you provide authentication with `Devise`, and a `User` m
 ## Installation
 Add to your gem file.
 
-```
+``` bash
 gem 'do_addon_connector'
 bundle 
 bin/rails do_addon_connector:install:migrations
@@ -20,7 +20,7 @@ rail db:migrate
 
 You can create an initializer at `do_addons_connector.rb` as follows:
 
-```
+``` ruby
 DoAddonConnector.setup do |config|
   # 
   # Service Name
