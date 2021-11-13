@@ -10,10 +10,10 @@ Currently requires that you provide authentication with `Devise`, and a `User` m
 Add to your gem file.
 
 ``` bash
-gem 'do_addon_connector'
+gem 'do_addon_connector', git: 'https://github.com/scott/do_addon_connector'
 bundle 
 bin/rails do_addon_connector:install:migrations
-rail db:migrate
+rails db:migrate
 ```
 
 ## Configuration
