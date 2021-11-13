@@ -28,6 +28,11 @@ DoAddonConnector.setup do |config|
   # This is the name of the parent service
   config.service_name = "YourApp"
 
+  # App Slug
+  # ======================
+  # This is the slug used by your app
+  config.slug = "your_slug"
+
   # Source
   # ======================
   # This represents the source of the user
