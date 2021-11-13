@@ -18,9 +18,11 @@ rail db:migrate
 
 ## Configuration
 
-You can create an initializer at `do_addons_connector.rb` as follows:
+You can create an initializer at `do_addon_connector.rb` as follows:
 
 ``` ruby
+# config/initializers/do_addon_connector.rb
+
 DoAddonConnector.setup do |config|
   # 
   # Service Name
@@ -44,6 +46,42 @@ DoAddonConnector.setup do |config|
   config.redirect_to = 'https://yoursite.com'
 end
 ```
+
+If you collect additonal user information at sign up, this will be provided during resource provisioning in the `metadata` section.  You can then use this information to further set up the user or prepare their account by adding a `concern` that extends the `Customer` object:
+
+```
+# app/models/concerns/customer_extensions.rb
+# Define additional setup actions here that you will need after 
+# the resource has been added
+
+module CustomerExtensions
+  extend ActiveSupport::Concern
+
+  included do
+    # associations and other class level things go here
+    after_create :update_user
+  end
+
+  # instance methods and code go here
+  def update_user
+    logger.info("Update User Attributes")
+    u = User.find(user_id)
+    u.first_name = metadata['first_name']
+    u.last_name = metadata['last_name']
+    u.plan = plan
+    u.save!
+  end
+end
+```
+Then to make sure this gets included, add the intializer:
+```
+# config/initializers/customer_extensions.rb
+
+Rails.application.config.to_prepare do
+  DoAddonConnector::Customer.include CustomerExtensions
+end
+```
+
 
 This gem expects `ENV` vars to authenticate and sign requests.  When you build your integration, you will get the following, and should set these vars on your server:
 
