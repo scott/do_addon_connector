@@ -13,7 +13,7 @@ class DoAddonConnector::Digitalocean::BaseController < ApplicationController
   def authenticate
 
     authenticate_or_request_with_http_basic('Basic') do |name, password|
-      name == ENV['DO_SLUG'] && password == "#{ENV['DO_PASSWORD']}"
+      name == DoAddonConnector.slug && password == "#{ENV['DO_PASSWORD']}"
     end
   end
 

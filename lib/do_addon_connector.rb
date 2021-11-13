@@ -5,6 +5,7 @@ module DoAddonConnector
   mattr_accessor :source
   mattr_accessor :redirect_to
   mattr_accessor :service_name
+  mattr_accessor :slug
 
   def self.redirect_to=(value)
     @@redirect_to = value
