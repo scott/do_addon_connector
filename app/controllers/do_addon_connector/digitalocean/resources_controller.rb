@@ -23,10 +23,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
     logger.info("Provisioning Request Received: \n\n #{params}")
     @user = User.new(
-      # company: company,
       email: email,
-      # first_name: first_name,
-      # last_name: last_name,
       source: DoAddonConnector.source,
       password: password
     )
@@ -53,7 +50,6 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       )
       if auth_code.save
         logger.info("\nAuth Code saved!\n")
-        # @user.fetch_token(auth_code.id)
         DoAddonConnector::Token.fetch(@user.id, auth_code.id) unless Rails.env.development?
       end
 
@@ -107,10 +103,9 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
   def update
     customer = DoAddonConnector::Customer.find_by(key: params[:id])
-    @user = User.find_by(id: customer.user_id)
-    if @user.present?
-      @user.plan = params[:plan_slug]
-      if @user.save
+    if customer.present?
+      customer.plan = params[:plan_slug]
+      if customer.save
         # Your app will then respond with the following:
 
         # // HTTP 200
