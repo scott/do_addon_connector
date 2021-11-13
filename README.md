@@ -49,7 +49,7 @@ end
 
 If you collect additonal user information at sign up, this will be provided during resource provisioning in the `metadata` section.  You can then use this information to further set up the user or prepare their account by adding a `concern` that extends the `Customer` object:
 
-```
+``` ruby
 # app/models/concerns/customer_extensions.rb
 # Define additional setup actions here that you will need after 
 # the resource has been added
@@ -74,7 +74,7 @@ module CustomerExtensions
 end
 ```
 Then to make sure this gets included, add the intializer:
-```
+``` ruby
 # config/initializers/customer_extensions.rb
 
 Rails.application.config.to_prepare do
@@ -85,7 +85,6 @@ end
 
 This gem expects `ENV` vars to authenticate and sign requests.  When you build your integration, you will get the following, and should set these vars on your server:
 
-`DO_SLUG`
 `DO_PASSWORD`
 `DO_SSOSALT`
 `DO_CLIENTSECRET`
