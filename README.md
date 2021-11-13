@@ -58,18 +58,22 @@ module CustomerExtensions
   extend ActiveSupport::Concern
 
   included do
-    # associations and other class level things go here
-    after_create :update_user
+    after_create :setup_user
+    after_update :change_plan
   end
 
-  # instance methods and code go here
-  def update_user
-    logger.info("Update User Attributes")
-    u = User.find(user_id)
-    u.first_name = metadata['first_name']
-    u.last_name = metadata['last_name']
-    u.plan = plan
-    u.save!
+  def setup_user
+    # Add your logic here to finish setting up the user
+    # account and subscribe them to the correct plan. ie
+    # u = User.find(user_id)
+    # u.first_name = metadata['first_name']
+    # u.last_name = metadata['last_name']
+    # u.plan = plan
+    # u.save!
+  end
+  
+  def change_plan
+    # Add your logic to change the users plan here
   end
 end
 ```
