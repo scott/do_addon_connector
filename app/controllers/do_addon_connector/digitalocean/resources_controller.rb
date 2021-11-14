@@ -22,19 +22,13 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
   def create
 
     logger.info("Provisioning Request Received: \n\n #{params}")
-    @user = User.new(
-      email: email,
-      source: DoAddonConnector.source,
-      password: password
-    )
 
-    if @user.save
-      logger.info("User saved\n")
+    if @account.save
 
       # associate to user with Customer
       customer = DoAddonConnector::Customer.create!(
-        user_id: @user.id,
         key: params[:uuid],
+        owner_id: @account.id,
         metadata: params[:metadata],
         plan: params[:plan_slug],
         email: params[:email],
@@ -43,14 +37,14 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
       # Save authorization_code
       auth_code = DoAddonConnector::Token.new(
-        user_id: @user.id,
+        owner_id: @account.id,
         kind: 'authorization_code',
         token: params['oauth_grant']['code'],
         expires_at: params['oauth_grant']['expires_at']
       )
       if auth_code.save
         logger.info("\nAuth Code saved!\n")
-        DoAddonConnector::Token.fetch(@user.id, auth_code.id) unless Rails.env.development?
+        DoAddonConnector::Token.fetch(@account.id, auth_code.id) unless Rails.env.development?
       end
 
       # Your app will then respond with the following:
@@ -83,10 +77,10 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       # 	"message": "A message that will be displayed to the DO user as to why the resource could not be created." // optional
       # }
       errors = "#{DoAddonConnector.service_name} could not be provisioned. "
-      @user.errors.messages.each do |err|
+      @account.errors.messages.each do |err|
         errors += "The #{String(err[0])} #{err[1][0].downcase}. "
       end
-      errors += "Please contact #{DoAddonConnector.service_name} Support. " if @user.errors.messages.length == 0
+      errors += "Please contact #{DoAddonConnector.service_name} Support. " if @account.errors.messages.length == 0
       
       render status: '422', json: { message: errors }
 
@@ -150,13 +144,11 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
   # {}
   def destroy
-    customer = DoAddonConnector::Customer.find_by(key: params[:id])
-    @user = User.find_by(id: customer.user_id)
-
-    if @user.present?
-      DoAddonConnector::Token.find_by(user_id: customer.user_id).destroy
-      @user.destroy!
-      customer.destroy!
+    
+    @customer = DoAddonConnector::Customer.find_by(key: params[:id])
+    if @customer.present?
+      DoAddonConnector::Token.find_by(owner_id: @customer.owner_id).destroy
+      @customer.destroy
 
       render status: '204', json: :ok
     else
@@ -164,18 +156,6 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
     end
   end
 
-  private
-  
-  def email
-    params[:email].present? ? params[:email] : 'firstuser@yoursite.com'
-  end
 
-  def password
-    if params[:metadata].present? && params[:metadata][:password].present?
-       params[:metadata][:password] 
-    else 
-      Devise.friendly_token
-    end    
-  end
   
 end
