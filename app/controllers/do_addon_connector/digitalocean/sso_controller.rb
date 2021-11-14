@@ -36,33 +36,24 @@ class DoAddonConnector::Digitalocean::SsoController < ApplicationController
   def create
 
     # look up user by DO uuid
-    customer = DoAddonConnector::Customer.find_by(key: params[:resource_uuid])
-    @user = User.find_by(id: customer.user_id)
+    @customer = DoAddonConnector::Customer.find_by(key: params[:resource_uuid])
     
-    if @user.present? && resource_token == params[:token]        
-        # authenticate user
-        # TODO: move this to the upper if statement so we fail if no email present
-        if params[:email].present?
-          user = User.find_or_create_by(email: params[:email]) do |u|
-            u.email = params[:email]
-            u.name = params[:email].split('@')[0]
-            u.role = 'admin'
-            u.password = Devise.friendly_token[0,20]
-          end
-        else
-          user = User.first #TODO: This is only for the POC
-        end
+    if @customer.present? && resource_token == params[:token] 
+      @sso_event = DoAddonConnector::SsoEvent.create!(
+        resource_uuid: params[:resource_uuid],
+        resource_token: params[:token],
+        timestamp: params[:timestamp],
+        email: params[:email]
+      )
 
-        sign_in(user)
-        redirect_to DoAddonConnector.redirect_to     
+      sign_in_action if @sso_event.present?
     else
       # do not auth
-      logger.info("********* Failed Login ********")
-      logger.info("System Salt: #{ENV['DO_SSOSALT']}")
-      logger.info("Presented Params: #{params}")
-      logger.info("Presented Token: #{params[:token]}")
-      logger.info("Expected Token: #{resource_token}")
-      logger.info("Tenant Found: #{@user.domain_name}")
+      # logger.info("********* Failed Login ********")
+      # logger.info("System Salt: #{ENV['DO_SSOSALT']}")
+      # logger.info("Presented Params: #{params}")
+      # logger.info("Presented Token: #{params[:token]}")
+      # logger.info("Expected Token: #{resource_token}")
       render nothing: true, status: '401'
     end
   end

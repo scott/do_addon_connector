@@ -1,7 +1,8 @@
 class CreateDoAddonConnectorCustomers < ActiveRecord::Migration[6.1]
   def change
     create_table :do_addon_connector_customers do |t|
-      t.integer :user_id
+      t.integer :owner_id
+      t.string :owner_type
       t.string :key
       t.json :metadata
       t.string :plan

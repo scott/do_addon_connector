@@ -8,13 +8,13 @@
 #  token      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  user_id    :integer
+#  owner_id    :integer
 #
 module DoAddonConnector
   class Token < ApplicationRecord
 
-    def self.fetch(user_id, token_id)
-      token = DoAddonConnector::Token.where(user_id: user_id, id: token_id).last
+    def self.fetch(owner_id, token_id)
+      token = DoAddonConnector::Token.where(owner_id: owner_id, id: token_id).last
       
       payload = {
         grant_type: token.kind,
@@ -38,14 +38,14 @@ module DoAddonConnector
       logger.info("Token Service Response: \n#{resp}")
 
       DoAddonConnector::Token.create!(
-        user_id: user_id,
+        owner_id: owner_id,
         kind: "access_token",
         token: req['access_token'],
         expires_at: Time.now + req['expires_in'].to_i
       )
 
       DoAddonConnector::Token.create!(
-        user_id: user_id,
+        owner_id: owner_id,
         kind: "refresh_token",
         token: req['refresh_token'],
         expires_at: Time.now + req['expires_in'].to_i
