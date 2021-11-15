@@ -1,24 +1,33 @@
 # DO Addon Connector
 
-Description of what it does.  Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
+ Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
 
 ## Requirements
 
-Currently requires that you provide authentication with `Devise`, and a `User` model.  Rails 6.1
+Current this gem supports Rails 6.1.  If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping. 
 
 ## Installation
+
 Add to your gem file.
 
 ``` bash
 gem 'do_addon_connector', git: 'https://github.com/scott/do_addon_connector'
-bundle 
+bundle install
+```
+
+Next install and migrate the database, then run the installation script:
+
+```
 bin/rails do_addon_connector:install:migrations
 rails db:migrate
+bin/rails g do_addon_connector:install
 ```
+This will add an initializer and some `Concerns` which you can use to configure behavior in your app for the following events:
+
 
 ## Configuration
 
-You can create an initializer at `do_addon_connector.rb` as follows:
+The initializer `do_addon_connector.rb` adds values as follows:
 
 ``` ruby
 # config/initializers/do_addon_connector.rb
@@ -47,45 +56,25 @@ DoAddonConnector.setup do |config|
 end
 ```
 
-If you collect additonal user information at sign up, this will be provided during resource provisioning in the `metadata` section.  You can then use this information to further set up the user or prepare their account by adding a `concern` that extends the `Customer` object:
+## Custom behavior with Concerns
 
-``` ruby
-# app/models/concerns/customer_extensions.rb
-# Define additional setup actions here that you will need after 
-# the resource has been added
+When you ran the installation script, several `Concerns` were added to your app.  These are used to define app behavior in response to the different actions provided by the provisioning service:
 
-module CustomerExtensions
-  extend ActiveSupport::Concern
+**Resource Creation** - when the service sends a resource creation request, your app should add an account and/or create a login for the user who has provisioned the app.  You can configure how the account/user gets created using: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/resources_controller_extension.rb
 
-  included do
-    after_create :setup_user
-    after_update :change_plan
-  end
+**Other Resource actions**
 
-  def setup_user
-    # Add your logic here to finish setting up the user
-    # account and subscribe them to the correct plan. ie
-    # u = User.find(user_id)
-    # u.first_name = metadata['first_name']
-    # u.last_name = metadata['last_name']
-    # u.plan = plan
-    # u.save!
-  end
-  
-  def change_plan
-    # Add your logic to change the users plan here
-  end
-end
-```
-Then to make sure this gets included, add the intializer:
-``` ruby
-# config/initializers/customer_extensions.rb
+As well as add some additional context from metadata and the initial plan the user is subscribed to here: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/models/concerns/customer_extensions.rb
 
-Rails.application.config.to_prepare do
-  DoAddonConnector::Customer.include CustomerExtensions
-end
-```
+**Plan upgrade/downgrade** - The above file also includes an action for upgrading and downgrading plans in response to a request from the provisioning service.
 
+**Resource destruction** - When DO sends a resource deletion request, your app will need to handle that.  You can specific what else will happen in this Concern.
+
+**SSO Login request** - When a DO user sends a SSO request, you will need to log them into your app. How you authenticate a user is up to your app, but you can use the following to respond to the SSO login request: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/sso_login_extension.rb
+
+
+
+## Environment
 
 This gem expects `ENV` vars to authenticate and sign requests.  When you build your integration, you will get the following, and should set these vars on your server:
 
