@@ -22,7 +22,12 @@ bin/rails do_addon_connector:install:migrations
 rails db:migrate
 bin/rails g do_addon_connector:install
 ```
-This will add an initializer and some `Concerns` which you can use to configure behavior in your app for the following events:
+Finally, mount the connector in `routes.rb`
+```
+  mount DoAddonConnector::Engine => '/connectors'
+```
+
+The install script will add an initializer and some `Concerns` which you can use to configure behavior in your app for the following events:
 
 
 ## Configuration
