@@ -1,15 +1,13 @@
 class DoAddonConnector::Digitalocean::SsoController < DoAddonConnector::ApplicationController
 
-  skip_before_action :verify_authenticity_token
-
   def create
     
     @customer = DoAddonConnector::Customer.find_by(key: params[:resource_uuid])
     if @customer.present? && resource_token == params[:token] 
       @sso_event = DoAddonConnector::SsoEvent.create!(
         resource_uuid: params[:resource_uuid],
-        # resource_token: params[:token],
-        # timestamp: params[:timestamp],
+        resource_token: params[:token],
+        timestamp: params[:timestamp],
         email: params[:email]
       )
       
