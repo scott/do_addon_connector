@@ -1,7 +1,7 @@
-class DoAddonConnector::Digitalocean::BaseController < ApplicationController
+class DoAddonConnector::Digitalocean::BaseController < DoAddonConnector::ApplicationController
 
   before_action :authenticate
-  
+
   # 
   # When DigitalOcean makes API requests to your app's endpoints, we will utilize basic auth. 
   # The auth header will contain a base64 encoded string consisting of your app's `slug` and the 
