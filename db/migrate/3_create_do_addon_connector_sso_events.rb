@@ -1,4 +1,4 @@
-class CreateDoAddonConnectorSsoEvents < ActiveRecord::Migration[6.1]
+class CreateDoAddonConnectorSsoEvents < ActiveRecord::Migration
   def change
     create_table :do_addon_connector_sso_events do |t|
       t.string :resource_uuid
