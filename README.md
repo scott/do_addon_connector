@@ -1,14 +1,14 @@
 # DO Addon Connector
 
- Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
+Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
 
 ## Requirements
 
-Current this gem supports Rails 6.1.  If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping. 
+Currently this gem supports Rails 6.1.  If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping. 
 
 ## Installation
 
-Add to your gem file.
+Add to your `Gemfile`.
 
 ``` bash
 gem 'do_addon_connector', git: 'https://github.com/scott/do_addon_connector'
@@ -22,13 +22,13 @@ bin/rails do_addon_connector:install:migrations
 rails db:migrate
 bin/rails g do_addon_connector:install
 ```
+
 Finally, mount the connector in `routes.rb`
 ```
   mount DoAddonConnector::Engine => '/connectors'
 ```
 
-The install script will add an initializer and some `Concerns` which you can use to configure behavior in your app for the following events:
-
+The install script will add an initializer and some `Concerns` which give you complete flexibility over how your application reacts to a provisioning or SSO request. 
 
 ## Configuration
 
@@ -60,10 +60,9 @@ DoAddonConnector.setup do |config|
   config.redirect_to = 'https://yoursite.com'
 end
 ```
-
 ## Custom behavior with Concerns
 
-When you ran the installation script, several `Concerns` were added to your app.  These are used to define app behavior in response to the different actions provided by the provisioning service:
+The installation script adds several `Concerns` were to your app.  These are used to define app behavior in response to the different actions provided by the provisioning service:
 
 **Resource Creation** - when the service sends a resource creation request, your app should add an account and/or create a login for the user who has provisioned the app.  You can configure how the account/user gets created using: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/resources_controller_extension.rb
 
@@ -73,7 +72,7 @@ As well as add some additional context from metadata and the initial plan the us
 
 **Plan upgrade/downgrade** - The above file also includes an action for upgrading and downgrading plans in response to a request from the provisioning service.
 
-**Resource destruction** - When DO sends a resource deletion request, your app will need to handle that.  You can specific what else will happen in this Concern.
+**Resource destruction** - When DO sends a resource deletion request, your app will need to handle that.  You can specifyc what else will happen in this `Concern`.
 
 **SSO Login request** - When a DO user sends a SSO request, you will need to log them into your app. How you authenticate a user is up to your app, but you can use the following to respond to the SSO login request: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/sso_login_extension.rb
 

@@ -20,8 +20,12 @@ module CustomerExtensions
 
   # User Setup
   # ===========================
+  # NOTE: The actual creation of the account/user on your system happens
+  # in the resources_controller_extension.rb concern.
+  # 
   # Add any additional user set up here, such as setting a plan
-  # for the new user account
+  # for the new user account.  Basically anything that should happen
+  # after the initial account/user has been created.
   # 
   def setup_user
     @u = User.find(owner_id)
