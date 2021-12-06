@@ -4,7 +4,7 @@ Sets up your site to connect with DO via resource provisioning, plan updates, an
 
 ## Requirements
 
-If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping. 
+Currently this gem supports Rails 6.1.  If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping. 
 
 ## Installation
 

@@ -1,9 +1,8 @@
 class DoAddonConnector::Digitalocean::SsoController < DoAddonConnector::ApplicationController
 
   def create
-    
     @customer = DoAddonConnector::Customer.find_by(key: params[:resource_uuid])
-    if @customer.present? && resource_token == params[:token] 
+    if @customer.present? && (resource_token == params[:token] || hmac_token == params[:token])
       @sso_event = DoAddonConnector::SsoEvent.create!(
         resource_uuid: params[:resource_uuid],
         resource_token: params[:token],
@@ -27,6 +26,10 @@ class DoAddonConnector::Digitalocean::SsoController < DoAddonConnector::Applicat
   
   def resource_token
     Digest::SHA256.hexdigest("#{params[:timestamp]}:#{ENV['DO_SSOSALT']}:#{params[:resource_uuid]}")
+  end
+
+  def hmac_token
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), ENV['DO_SSOSALT'], "#{params[:timestamp]}:#{params[:resource_uuid]}")
   end
 
   def current_protocol
