@@ -42,23 +42,44 @@ DoAddonConnector.setup do |config|
   # Service Name
   # ======================
   # This is the name of the parent service
-  config.service_name = "YourApp"
+  config.service_name = "Application"
 
   # App Slug
   # ======================
   # This is the slug used by your app
-  config.slug = "your_slug"
+  config.slug = "acme"
+
+  # Password
+  # ======================
+  # This is the password assigned to your resource
+  config.password = "password" 
+
+  # Salt
+  # ======================
+  # This is the salt assigned to your resource
+  config.salt = "sso_salt"
+  
+  # Secret
+  # ======================
+  # This is the client secret assigned to your resource
+  config.secret = "do_secret"
+
+  # Token Expiration
+  # ======================
+  # This is how long in seconds before the token is expired
+  config.token_expires_in = 120
 
   # Source
   # ======================
   # This represents the source of the user
-  config.source = 'do'
+  config.source = 'digitalocean'
 
   # SSO Redirect
   # ======================
   # This determines where the user should be taken after a successful SSO
-  config.redirect_to = 'https://yoursite.com'
+  config.redirect_to = 'https://scrubl.com/dashboard'
 end
+
 ```
 ## Custom behavior with Concerns
 
