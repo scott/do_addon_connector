@@ -6,6 +6,11 @@ module DoAddonConnector
   mattr_accessor :redirect_to
   mattr_accessor :service_name
   mattr_accessor :slug
+  mattr_accessor :token_expires_in
+  mattr_accessor :password
+  mattr_accessor :salt
+  mattr_accessor :secret
+
 
   def self.redirect_to=(value)
     @@redirect_to = value
