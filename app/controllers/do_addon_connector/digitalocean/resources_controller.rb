@@ -25,7 +25,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
       )
       if auth_code.save
         logger.info("\nAuth Code saved!\n")
-        DoAddonConnector::Token.fetch(@account.id, auth_code.id) unless Rails.env.development?
+        DoAddonConnector::Token.fetch(@account.id, auth_code.id) if Rails.env.production?
       end
 
       # Your app will then respond with the following:
@@ -84,10 +84,8 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
   def destroy
     @customer = DoAddonConnector::Customer.find_by(key: params[:id])
-
     if @customer.present?
-      token = DoAddonConnector::Token.find_by(owner_id: @customer.owner_id)
-      token.destroy if token.present?
+      DoAddonConnector::Token.find_by(owner_id: @customer.owner_id).destroy
       @customer.destroy
 
       render status: '204', json: :ok

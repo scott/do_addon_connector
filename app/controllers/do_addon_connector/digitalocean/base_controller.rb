@@ -11,9 +11,8 @@ class DoAddonConnector::Digitalocean::BaseController < DoAddonConnector::Applica
   # 
   # 
   def authenticate
-
     authenticate_or_request_with_http_basic('Basic') do |name, password|
-      name == DoAddonConnector.slug && password == "#{ENV['DO_PASSWORD']}"
+      name == DoAddonConnector.slug && password == "#{DoAddonConnector.password}"
     end
   end
 

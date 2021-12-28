@@ -3,12 +3,32 @@ DoAddonConnector.setup do |config|
   # Service Name
   # ======================
   # This is the name of the parent service
-  config.service_name = "Scrubl"
+  config.service_name = "Application"
 
   # App Slug
   # ======================
   # This is the slug used by your app
-  config.slug = "acme" #"scrubl-staging"
+  config.slug = "acme"
+
+  # Password
+  # ======================
+  # This is the password assigned to your resource
+  config.password = "password" 
+
+  # Salt
+  # ======================
+  # This is the salt assigned to your resource
+  config.salt = "do_salt"
+  
+  # Secret
+  # ======================
+  # This is the client secret assigned to your resource
+  config.secret = "do_secret"
+
+  # Token Expiration
+  # ======================
+  # This is how long in seconds before the token is expired
+  config.token_expires_in = 120
 
   # Source
   # ======================

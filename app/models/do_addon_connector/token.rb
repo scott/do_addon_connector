@@ -19,7 +19,7 @@ module DoAddonConnector
       payload = {
         grant_type: token.kind,
         code: token.token,
-        client_secret: ENV['DO_CLIENTSECRET']
+        client_secret: DoAddonConnector.secret
       }.to_json
 
       logger.info("Fetching access_token and refresh_token")
