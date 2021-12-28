@@ -18,7 +18,7 @@ DoAddonConnector.setup do |config|
   # Salt
   # ======================
   # This is the salt assigned to your resource
-  config.salt = "do_salt"
+  config.salt = "sso_salt"
   
   # Secret
   # ======================
