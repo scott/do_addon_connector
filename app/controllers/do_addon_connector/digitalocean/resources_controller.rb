@@ -85,7 +85,8 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
   def destroy
     @customer = DoAddonConnector::Customer.find_by(key: params[:id])
     if @customer.present?
-      DoAddonConnector::Token.find_by(owner_id: @customer.owner_id).destroy
+      DoAddonConnector::Token.where(owner_id: @customer.id).destroy_all
+      DoAddonConnector::SsoEvent.where(owner_id: @customer.id).destroy_all
       @customer.destroy
 
       render status: '204', json: :ok
