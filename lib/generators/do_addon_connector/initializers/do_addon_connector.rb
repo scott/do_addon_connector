@@ -38,7 +38,7 @@ DoAddonConnector.setup do |config|
   # SSO Redirect
   # ======================
   # This determines where the user should be taken after a successful SSO
-  config.redirect_to = 'https://scrubl.com/dashboard'
+  config.redirect_to = 'https://your-app.com/dashboard'
 end
 
 
@@ -52,7 +52,12 @@ Rails.application.config.to_prepare do
   DoAddonConnector::Digitalocean::SsoController.include SsoLoginExtension
 end
 
-# config/initializers/sso_login_extensions.rb
+# config/initializers/notifications_controller_extension.rb
+Rails.application.config.to_prepare do  
+  DoAddonConnector::Digitalocean::NotificationsController.include NotificationsControllerExtension
+end
+
+# config/initializers/resources_controller_extension.rb
 Rails.application.config.to_prepare do  
   DoAddonConnector::Digitalocean::ResourcesController.include ResourcesControllerExtension
 end
