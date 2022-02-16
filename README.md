@@ -91,6 +91,8 @@ end
 
 The installation script adds several `Concerns` to your app.  These are used to define app behavior in response to the different actions provided by the provisioning service:
 
+## Resource Actions
+
 **Resource Creation** - when the service sends a resource creation request, your app should add an account and/or create a login for the user who has provisioned the app.  You can configure how the account/user gets created using: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/resources_controller_extension.rb
 
 Important: The resource creation concern *must set* an `@account` instance variable.  Failure to do this will cause your provisioning to fail.
@@ -105,11 +107,19 @@ More described here:
 
 **Resource destruction** - When DO sends a resource deletion request, your app will need to handle that.  You can specify what else will happen in this `Concern`.
 
-**SSO Login request** - When a DO user sends a SSO request, you will need to log them into your app. How you authenticate a user is up to your app, but you can use the following to respond to the SSO login request: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/sso_login_extension.rb
+## SSO Login request 
+
+When a DO user sends a SSO request, you will need to log them into your app. How you authenticate a user is up to your app, but you can use the following to respond to the SSO login request: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/sso_login_extension.rb
+
+## Notifications
+
+The service will send notification webhooks to your app when certain events happen. If a customer fails to pay their bill, a webhook indicating this will be sent to your app.  Likewise, if the same customer becomes current again, another notification indicating this will be sent.
+
+You can customize how your app behaves in response to any notification with `notifications_concern`.
 
 
 ## Contributing
 Contribution directions go here.
 
 ## License
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). Copyright 2021, 2022 Scott Miller, Helpy.io, Inc.
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). Copyright 2022 Scott Miller, Helpy.io, Inc.

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  resource_id: 1
+  type: 
+  completed_at: 2022-02-15 18:17:22
+
+two:
+  resource_id: 1
+  type: 
+  completed_at: 2022-02-15 18:17:22
