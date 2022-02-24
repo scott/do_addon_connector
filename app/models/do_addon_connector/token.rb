@@ -25,7 +25,7 @@ module DoAddonConnector
       logger.info("Fetching access_token and refresh_token")
       logger.info("POST #{payload.to_json}")
 
-      resp = HTTP.post("https://api.digitalocean.com/v2/saas/oauth/token", body: payload)
+      resp = HTTP.post("https://api.digitalocean.com/v2/add-ons/oauth/token", body: payload)
       req = JSON.parse(resp)
 
       # {
