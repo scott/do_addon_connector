@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     do_addon_connector (0.1.0)
-      rails (~> 6.1.4, >= 6.1.4.1)
+      rails (>= 4.2.0)
 
 GEM
   remote: https://rubygems.org/
