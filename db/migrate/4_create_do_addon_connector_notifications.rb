@@ -1,4 +1,4 @@
-class CreateDoAddonConnectorNotifications < ActiveRecord::Migration
+class CreateDoAddonConnectorNotifications < ActiveRecord::Migration[6.1]
   def change
     create_table :do_addon_connector_notifications do |t|
       t.integer :owner_id, index: true
