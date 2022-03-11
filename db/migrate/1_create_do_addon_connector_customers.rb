@@ -1,4 +1,4 @@
-class CreateDoAddonConnectorCustomers < ActiveRecord::Migration
+class CreateDoAddonConnectorCustomers < ActiveRecord::Migration[6.1]
   def change
     create_table :do_addon_connector_customers do |t|
       t.integer :owner_id
