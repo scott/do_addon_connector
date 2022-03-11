@@ -1,16 +1,3 @@
-
-# // POST /digitalocean/notifications
-# // Content-Type: application/json
-# // Authorization: Basic YWNtZToxMjM0
-
-# {
-# 	"type": "resources.suspended", 
-#   "created_at": 1620915831,
-# 	"payload": {
-# 		"resources_uuids": []
-# 	}
-# }
-
 class DoAddonConnector::Digitalocean::NotificationsController < DoAddonConnector::Digitalocean::BaseController
   
   def create
@@ -19,9 +6,11 @@ class DoAddonConnector::Digitalocean::NotificationsController < DoAddonConnector
       payload: params[:payload]
     )
 
-    @notification.save
-
-    render status: '200', json: :ok
+    if @notification.save
+      render status: '200', json: :ok
+    else
+      render status: '500'
+    end
   end
 
 end
