@@ -13,7 +13,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
         metadata: params[:metadata],
         plan: params[:plan_slug],
         email: params[:email],
-        creator_uuid: params[:creator_uuid]
+        creator_id: params[:creator_id]
       )
 
       # Save authorization_code
