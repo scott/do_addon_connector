@@ -7,7 +7,8 @@ class DoAddonConnector::Digitalocean::SsoController < DoAddonConnector::Applicat
         resource_uuid: params[:resource_uuid],
         resource_token: params[:token],
         timestamp: params[:timestamp],
-        email: params[:email],
+        email: params[:user_email],
+        user_id: params[:user_id],
         owner_id: @customer.id
       )
       logger.info("********* Successful Login ********")
