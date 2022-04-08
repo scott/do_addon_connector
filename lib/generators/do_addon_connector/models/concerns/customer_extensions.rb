@@ -28,11 +28,8 @@ module CustomerExtensions
   # after the initial account/user has been created.
   # 
   def setup_user
-    @u = User.find(owner_id)
-    set_plan
-    @u.first_name = metadata['first_name']
-    @u.last_name = metadata['last_name']
-    @u.save!
+    # @u = User.find(owner_id)
+    # @u.save!
   end
 
   # Change User Account Plan
