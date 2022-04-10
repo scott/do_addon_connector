@@ -1,12 +1,12 @@
 # DO Addon Connector
 
-Sets up your site to connect with DO via resource provisioning, plan updates, and SSO.
+Sets up your site to connect with DO via resource provisioning, plan updates, web-hook notifications, and SSO.
 
 ## Requirements
 
 If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping.
 
-This connector attempts to be flexible and work with most account/user designs by allowing you to customize what happens after a resource has been provisioned or change.  You can do this through custom logic inserted through Rails Concerns.
+This connector attempts to be flexible and work with most account/user designs by allowing you to customize what happens after a resource has been provisioned or changed.  You can do this through custom logic inserted through Rails Concerns.
 
 ## Installation
 
