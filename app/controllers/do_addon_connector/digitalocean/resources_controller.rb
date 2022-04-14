@@ -7,7 +7,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
     if @account.save
 
       # associate to user with Customer
-      customer = DoAddonConnector::Customer.create!(
+      customer = DoAddonConnector::Customer.new(
         key: params[:uuid],
         owner_id: @account.id,
         metadata: params[:metadata],
@@ -16,18 +16,22 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
         creator_id: params[:creator_id]
       )
 
-      # Save authorization_code
-      auth_code = DoAddonConnector::Token.new(
-        owner_id: @account.id,
-        kind: 'authorization_code',
-        token: params['oauth_grant']['code'],
-        expires_at: params['oauth_grant']['expires_at']
-      )
-      if auth_code.save
-        logger.info("\nAuth Code saved!\n")
-        DoAddonConnector::Token.fetch(@account.id, auth_code.id) if Rails.env.production?
+      if customer.save
+        # Save authorization_code
+        auth_code = DoAddonConnector::Token.new(
+          owner_id: @account.id,
+          kind: 'authorization_code',
+          token: params['oauth_grant']['code'],
+          expires_at: params['oauth_grant']['expires_at']
+        )
+        if auth_code.save
+          logger.info("\nAuth Code saved!\n")
+          begin
+            DoAddonConnector::Token.fetch(@account.id, auth_code.id) if Rails.env.production?
+          rescue
+          end
+        end
       end
-
       # Your app will then respond with the following:
       # // HTTP 201
 
