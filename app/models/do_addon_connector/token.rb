@@ -33,7 +33,7 @@ module DoAddonConnector
       resp = HTTP.post("https://api.digitalocean.com/v2/add-ons/oauth/token", body: payload)
       req = JSON.parse(resp)
 
-      logger.info("Token Service Response: \n#{resp}") if DoAddonConnector.debug?
+      logger.info("Token Service Response: \n#{resp}") if DoAddonConnector.debug == true
 
       DoAddonConnector::Token.create!(
         owner_id: owner_id,
