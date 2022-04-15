@@ -11,11 +11,11 @@ module DoAddonConnector
       end
 
       # send config vars
-      HTTP.auth("Bearer #{self.access_token}")
+      
       payload = {
         "config": vars
       }.to_json
-      resp = HTTP.patch("https://api.digitalocean.com/v2/add-ons/resources/#{self.key}/config", body: payload)
+      resp = HTTP.auth("Bearer #{self.access_token.token}").patch("https://api.digitalocean.com/v2/add-ons/resources/#{self.key}/config", body: payload)
       req = JSON.parse(resp)
     end
 
