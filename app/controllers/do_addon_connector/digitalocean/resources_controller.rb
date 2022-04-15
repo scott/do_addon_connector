@@ -27,8 +27,9 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
         if auth_code.save
           logger.info("\nAuth Code saved!\n")
           begin
-            DoAddonConnector::Token.fetch(@account.id, auth_code.id) if Rails.env.production?
+            DoAddonConnector::Token.fetch(@account.id, auth_code.id) #if Rails.env.production?
           rescue
+            logger.error("There was an error getting a refresh token")
           end
         end
       end

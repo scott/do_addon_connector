@@ -28,16 +28,8 @@ module DoAddonConnector
       logger.info("Fetching access_token and refresh_token")
       logger.info("POST #{payload.to_json}")
 
-
-      url = URI("https://api.digitalocean.com/v2/add-ons/oauth/token")
-
-      https = Net::HTTP.new(url.host, url.port)
-      https.use_ssl = true
-
-      request = Net::HTTP::Post.new(url)
-      request.body = payload
-
-      resp = https.request(request)
+      resp = HTTP.post("https://api.digitalocean.com/v2/add-ons/oauth/token", body: payload)
+      req = JSON.parse(resp)
 
       logger.info("Token Service Response: \n#{resp}")
 

@@ -1,5 +1,6 @@
 require "do_addon_connector/version"
 require "do_addon_connector/engine"
+require "http"
 
 module DoAddonConnector
   mattr_accessor :source
