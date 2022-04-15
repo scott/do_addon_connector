@@ -54,13 +54,13 @@ module DoAddonConnector
 
       payload = {
         grant_type: "refresh_token",
-        code: customer.refresh_token,
+        code: customer.refresh_token.token,
         client_secret: DoAddonConnector.secret
       }.to_json
 
       if DoAddonConnector.debug == true
-        logger.info("Refreshing access_tokenn")
-        logger.info("POST #{payload.to_json}")
+        logger.info("Refreshing access_token")
+        logger.info("POST #{payload}")
       end
       
       resp = HTTP.post("https://api.digitalocean.com/v2/add-ons/oauth/token", body: payload)

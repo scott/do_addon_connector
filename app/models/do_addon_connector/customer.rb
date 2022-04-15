@@ -6,7 +6,7 @@ module DoAddonConnector
     def update_config(vars = {})
 
       # check if access token is expired, refresh if needed
-      if self.access_token.expires_at < Time.now.to_i
+      if Time.now > self.access_token.expires_at
         DoAddonConnector::Token.refresh(self.owner_id)
       end
 
