@@ -38,14 +38,14 @@ module DoAddonConnector
         owner_id: owner_id,
         kind: "access_token",
         token: req['access_token'],
-        expires_at: Time.now + req['expires_in'].to_i
+        expires_at: Time.now + req['expires_in'].to_i.seconds
       )
 
       DoAddonConnector::Token.create!(
         owner_id: owner_id,
         kind: "refresh_token",
         token: req['refresh_token'],
-        expires_at: Time.now + req['expires_in'].to_i
+        expires_at: Time.now + req['expires_in'].to_i.seconds
       )
     end
     
@@ -70,9 +70,9 @@ module DoAddonConnector
 
       DoAddonConnector::Token.create!(
         owner_id: owner_id,
-        kind: "access_token",
-        token: req['access_token'],
-        expires_at: Time.now + req['expires_in'].to_i
+        kind: "refresh_token",
+        token: req['refresh_token'],
+        expires_at: Time.now + req['expires_in'].to_i.seconds
       )
 
     end
