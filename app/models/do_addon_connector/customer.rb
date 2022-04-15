@@ -2,5 +2,30 @@ module DoAddonConnector
   class Customer < ApplicationRecord
     validates :owner_id, uniqueness: true
     validates :key, uniqueness: true
+
+    def update_config(vars = {})
+
+      # check if access token is expired, refresh if needed
+      if self.access_token.expires_at < Time.now.to_i
+        DoAddonConnector::Token.refresh(self.owner_id)
+      end
+
+      # send config vars
+      HTTP.auth("Bearer #{self.access_token}")
+      payload = {
+        "config": vars
+      }.to_json
+      resp = HTTP.patch("https://api.digitalocean.com/v2/add-ons/resources/#{self.key}/config", body: payload)
+      req = JSON.parse(resp)
+    end
+
+    def access_token
+      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'access_token').order(created_at: :desc).last
+    end
+
+    def refresh_token
+      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'refresh_token').order(created_at: :desc).last
+    end
+
   end
 end
