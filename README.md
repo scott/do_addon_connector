@@ -84,6 +84,11 @@ DoAddonConnector.setup do |config|
   # This determines where the user should be taken after a successful SSO.
   # This can also be handled in the `Concern` file.
   config.redirect_to = 'https://scrubl.com/dashboard'
+
+  # Debug
+  # ======================
+  # Logs additional information and stores SSO tokens for later inspection
+  config.debug = false
 end
 
 ```

@@ -2,7 +2,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
 
   def create
 
-    logger.info("Provisioning Request Received: \n\n #{params}")
+    logger.info("Provisioning Request Received: \n\n #{params}") if DoAddonConnector.debug == true
 
     if @account.save
 
@@ -25,11 +25,11 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
           expires_at: params['oauth_grant']['expires_at']
         )
         if auth_code.save
-          logger.info("\nAuth Code saved!\n")
+          logger.info("\nAuth Code saved!\n")  if DoAddonConnector.debug == true
           begin
-            DoAddonConnector::Token.fetch(@account.id, auth_code.id) #if Rails.env.production?
+            DoAddonConnector::Token.fetch(@account.id, auth_code.id)
           rescue
-            logger.error("There was an error getting a refresh token")
+            logger.error("There was an error getting a refresh token")  if DoAddonConnector.debug == true
           end
         end
       end

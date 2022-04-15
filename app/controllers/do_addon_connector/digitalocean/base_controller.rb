@@ -15,5 +15,4 @@ class DoAddonConnector::Digitalocean::BaseController < DoAddonConnector::Applica
       name == DoAddonConnector.slug && password == "#{DoAddonConnector.password}"
     end
   end
-
 end

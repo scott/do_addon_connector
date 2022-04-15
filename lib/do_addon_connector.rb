@@ -11,6 +11,7 @@ module DoAddonConnector
   mattr_accessor :password
   mattr_accessor :salt
   mattr_accessor :secret
+  mattr_accessor :debug
 
 
   def self.redirect_to=(value)

@@ -7,8 +7,16 @@ class DoAddonConnector::Digitalocean::NotificationsController < DoAddonConnector
     )
 
     if @notification.save
+      if DoAddonConnector.debug == true
+        logger.info("********* Notification Received ********")
+        logger.info("#{params}")
+      end
       render status: '200', json: :ok
     else
+      if DoAddonConnector.debug == true
+        logger.info("********* Notification Error ********")
+        logger.info("#{params}")
+      end
       render status: '500'
     end
   end

@@ -25,13 +25,15 @@ module DoAddonConnector
         client_secret: DoAddonConnector.secret
       }.to_json
 
-      logger.info("Fetching access_token and refresh_token")
-      logger.info("POST #{payload.to_json}")
-
+      if DoAddonConnector.debug == true
+        logger.info("Fetching access_token and refresh_token")
+        logger.info("POST #{payload.to_json}")
+      end
+      
       resp = HTTP.post("https://api.digitalocean.com/v2/add-ons/oauth/token", body: payload)
       req = JSON.parse(resp)
 
-      logger.info("Token Service Response: \n#{resp}")
+      logger.info("Token Service Response: \n#{resp}") if DoAddonConnector.debug?
 
       DoAddonConnector::Token.create!(
         owner_id: owner_id,

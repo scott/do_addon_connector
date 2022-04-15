@@ -39,6 +39,12 @@ DoAddonConnector.setup do |config|
   # ======================
   # This determines where the user should be taken after a successful SSO
   config.redirect_to = 'https://your-app.com/dashboard'
+
+  # Debug
+  # ======================
+  # Logs additional information and stores SSO tokens for later inspection
+  config.debug = false
+
 end
 
 
