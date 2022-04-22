@@ -15,6 +15,9 @@ require "json"
 require "net/http"
 module DoAddonConnector
   class Token < ApplicationRecord
+
+    # Use the auth token to fetch a refresh_token and an access_token
+    # 
     def self.fetch(owner_id, token_id)
       token = DoAddonConnector::Token.where(owner_id: owner_id, id: token_id).last
       
@@ -49,6 +52,8 @@ module DoAddonConnector
       )
     end
     
+    # Use the refresh token to get a new access_token
+    # 
     def self.refresh(owner_id)
       customer = DoAddonConnector::Customer.find_by(owner_id: owner_id)
 
@@ -68,10 +73,11 @@ module DoAddonConnector
 
       logger.info("Token Service Response: \n#{resp}") if DoAddonConnector.debug == true
 
+      # Store the returned access token
       DoAddonConnector::Token.create!(
         owner_id: owner_id,
-        kind: "refresh_token",
-        token: req['refresh_token'],
+        kind: "access_token",
+        token: req['access_token'],
         expires_at: Time.now + req['expires_in'].to_i.seconds
       )
 
