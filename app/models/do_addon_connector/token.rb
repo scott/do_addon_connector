@@ -59,7 +59,7 @@ module DoAddonConnector
 
       payload = {
         grant_type: "refresh_token",
-        code: customer.refresh_token.token,
+        refresh_token: customer.refresh_token.token,
         client_secret: DoAddonConnector.secret
       }.to_json
 
