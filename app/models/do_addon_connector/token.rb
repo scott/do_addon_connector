@@ -48,7 +48,7 @@ module DoAddonConnector
         owner_id: owner_id,
         kind: "refresh_token",
         token: req['refresh_token'],
-        expires_at: Time.now + req['expires_in'].to_i.seconds
+        expires_at: Time.now + 1000.years
       )
     end
     
@@ -81,6 +81,13 @@ module DoAddonConnector
         expires_at: Time.now + req['expires_in'].to_i.seconds
       )
 
+      # Store the new refresh token
+      DoAddonConnector::Token.create!(
+        owner_id: owner_id,
+        kind: "refresh_token",
+        token: req['refresh_token'],
+        expires_at: Time.now + 1000.years
+      )
     end
   end
 end
