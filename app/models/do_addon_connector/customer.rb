@@ -20,11 +20,11 @@ module DoAddonConnector
     end
 
     def access_token
-      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'access_token').order(created_at: :desc).last
+      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'access_token').order(created_at: :desc).first
     end
 
     def refresh_token
-      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'refresh_token').order(created_at: :desc).last
+      DoAddonConnector::Token.where(owner_id: self.owner_id, kind: 'refresh_token').order(created_at: :desc).first
     end
 
   end
