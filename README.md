@@ -7,7 +7,7 @@ This gem adds all of the required plumbing for your SaaS Rails application to in
 3. Notifications: Web-hook notifications about specific resources
 4. Configuration Variables: Allows your application to push data back into the customers DigitalOcean interface
 
-You will still need to decide how your app will respond to each of these.
+Official integration docs here: https://marketplace.digitalocean.com/vendors/saas-api-docs
 
 ## Requirements
 
@@ -126,6 +126,14 @@ DigitalOcean marketplace will send notification webhooks to your app when certai
 
 You can customize how your app behaves in response to any notification within the `notifications_concern`.
 
+## Configuration Variables
+
+Your SaaS can send Key-Value variables back to DigitalOcean where they will be provided to customers within the marketplace UI.  This can be useful if you want to communicate an API key, password or URL.  To do this, use something like the following:
+
+```
+DoAddonConnetor::Customer.find_by(owner_id: <your-id>).update_config(vars = {"FOO":"BAR})
+```
+The `owner_id` is is the account ID or customer ID on your SaaS.
 
 ## Contributing
 Please submit issues or PRs for bugs or improvement ideas.
@@ -134,4 +142,4 @@ Please submit issues or PRs for bugs or improvement ideas.
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). Copyright 2022 Scott Miller, Helpy.io, Inc.
 
 ## Note
-This integration is used in production at [Helpy.io](https://helpy.io) where it was extracted and turned into a gem. At Helpy we were fortunate enough to gain early access to the add-ons marketplace as a beta partner.
+This integration is used in production at [Helpy.io](https://helpy.io) where it was extracted and turned into a gem. At Helpy we were fortunate enough to gain early access to the add-ons marketplace as a beta partner, and felt it was only appropriate to contribute this work back to accelerate the integration process at other companies.
