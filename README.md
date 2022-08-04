@@ -1,10 +1,17 @@
-# DO Addon Connector
+# Unofficial DigitalOcean Marketplace Add-ons Connector
 
-Sets up your site to connect with DO via resource provisioning, plan updates, web-hook notifications, and SSO.
+This gem adds all of the required plumbing for your SaaS Rails application to integrate with the new add-ons marketplace at DigitalOcean. It is designed to be flexible and adds integration points, but does not specify how your SaaS creates accounts or handles other specific things. Integrating with the add-ons marketplae involves 4 touch points: 
+
+1. Resources: Account provisioning, deprovisioning, and plan updates, 
+2. SSO: Allows DigitalOcean customers to sign into their account from within DigitalOcean
+3. Notifications: Web-hook notifications about specific resources
+4. Configuration Variables: Allows your application to push data back into the customers DigitalOcean interface
+
+Official integration docs here: https://marketplace.digitalocean.com/vendors/saas-api-docs
 
 ## Requirements
 
-If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your addon will be mapped to a single `User` in your app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping.
+If you use Devise to authenticate `Users`, this should work mostly out of the box.  Each customer of your add-on will be mapped to a single `User` in your SaaS app. With some customization (see below) you could easily adapt this to work with some other approach, like `Account` or `Tenant` mapping.
 
 This connector attempts to be flexible and work with most account/user designs by allowing you to customize what happens after a resource has been provisioned or changed.  You can do this through custom logic inserted through Rails Concerns.
 
@@ -98,15 +105,12 @@ The installation script adds several `Concerns` to your app.  These are used to 
 
 ## Resource Actions
 
-**Resource Creation** - when the service sends a resource creation request, your app should add an account and/or create a login for the user who has provisioned the app.  You can configure how the account/user gets created using: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/resources_controller_extension.rb
+**Resource Provisioning** - when the service sends a resource creation request, your app should add an account and/or create a login for the user who has provisioned the app.  You can configure how the account/user gets created using: https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/controllers/concerns/resources_controller_extension.rb
 
-Important: The resource creation concern *must set* an `@account` instance variable.  Failure to do this will cause your provisioning to fail.
+*Important: The resource creation concern **must set** an `@account` instance variable.  Failure to do this will cause your provisioning to fail.*
 
-**Other Resource actions**
+After the customer has been added on your app, you can use the `customer_extensions` concern to add context from metadata and set the resources initial plan subscription. https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/models/concerns/customer_extensions.rb
 
-The resource API also allows for updating and deleting a resource in your app. Use the `customer_extensions` concern to add context from metadata and set the resources initial plan subscription. https://github.com/scott/do_addon_connector/blob/master/lib/generators/do_addon_connector/models/concerns/customer_extensions.rb
-
-More described here:
 
 **Plan upgrade/downgrade** - The above file also includes an action for upgrading and downgrading plans in response to a request from the provisioning service.
 
@@ -118,13 +122,24 @@ When a DO user sends a SSO request, you will need to log them into your app. How
 
 ## Notifications
 
-The service will send notification webhooks to your app when certain events happen. If a customer fails to pay their bill, a webhook indicating this will be sent to your app.  Likewise, if the same customer becomes current again, another notification indicating this will be sent.
+DigitalOcean marketplace will send notification webhooks to your app when certain events happen. If a customer fails to pay their bill, a webhook indicating this will be sent to your app.  Likewise, if the same customer becomes current again, another notification indicating this will be sent.
 
-You can customize how your app behaves in response to any notification with `notifications_concern`.
+You can customize how your app behaves in response to any notification within the `notifications_concern`.
 
+## Configuration Variables
+
+Your SaaS can send Key-Value variables back to DigitalOcean where they will be provided to customers within the marketplace UI.  This can be useful if you want to communicate an API key, password or URL.  To do this, use something like the following:
+
+```
+DoAddonConnetor::Customer.find_by(owner_id: <your-id>).update_config(vars = {"FOO":"BAR})
+```
+The `owner_id` is is the account ID or customer ID on your SaaS.
 
 ## Contributing
-Contribution directions go here.
+Please submit issues or PRs for bugs or improvement ideas.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT). Copyright 2022 Scott Miller, Helpy.io, Inc.
+
+## Note
+This integration is used in production at [Helpy.io](https://helpy.io) where it was extracted and turned into a gem. At Helpy we were fortunate enough to gain early access to the add-ons marketplace as a beta partner, and felt it was only appropriate to contribute this work back to accelerate the integration process at other companies.
