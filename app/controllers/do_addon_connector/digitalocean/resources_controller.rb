@@ -69,7 +69,7 @@ class DoAddonConnector::Digitalocean::ResourcesController < DoAddonConnector::Di
     customer = DoAddonConnector::Customer.find_by(key: params[:id])
     if customer.present?
       customer.plan = params[:plan_slug]
-      if customer.save        
+      if customer.save && params[:plan_slug] != 'failed-plan-change'       
         response = {
           message: "Your #{DoAddonConnector.service_name} plan was changed"
         }
